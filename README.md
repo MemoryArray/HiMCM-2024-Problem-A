@@ -33,6 +33,3 @@ This is a brief of the main points in the problem.
 > 4. Identify three SDEs that could be new additions or reintroductions for the 2032 Olympics in Brisbane. Make sure to identify which SDE should be considered first, second and third for inclusion in the Brisbane games. Are there any SDEs that you believe have potential for inclusion in an Olympic games in 2036 or beyond?
 > 5. Perform sensitivity analysis to address the robustness of your model. Identify what aspects of your model make an SDE score well and discuss if these represent a strength or weakness of your model, especially in light of it being used as a decision-making tool.
 > 6. Draft a one-to-two-page letter addressed to the IOC summarizing your findings in a nontechnical way. Explain your model’s rationale and its results for the evaluated SDEs. Include your recommendations for which SDEs to add or remove and why your model supports these conclusions.
-
----
-
