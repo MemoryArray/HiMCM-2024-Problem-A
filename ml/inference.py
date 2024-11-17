@@ -1,31 +1,32 @@
+import os
 import torch
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
-from models import TransformerModel
+from models.transformer import TransformerModel
+from utils.data_utils import load_data
+from utils.marcos_utils import calculate_combined_weighted_factors
 
-# Set device
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# Constants
+DATA_PATH = "../data/plans_data.csv"
+CHECKPOINT_PATH = "../checkpoints/final_model.pth"
+OUTPUT_PATH = "../data/weights.csv"
 
-# Load data and preprocess
-data = pd.read_csv("data.csv")
-factors = data.iloc[:, 2:8].values
+# Main
+if __name__ == "__main__":
+    # Load data
+    data = load_data(DATA_PATH)
 
-# Load scaler
-scaler = MinMaxScaler()
-scaled_factors = torch.tensor(scaler.fit_transform(factors), dtype=torch.float32)
+    # Load model
+    input_dim = data.shape[1] - 2
+    model = TransformerModel(input_dim, input_dim)
+    model.load_state_dict(torch.load(CHECKPOINT_PATH))
+    model.eval()
 
-# Load model checkpoint
-checkpoint_path = "model_checkpoint.pth"
-model = TransformerModel(input_dim=scaled_factors.shape[1], output_dim=1)
-checkpoint = torch.load(checkpoint_path)
-model.load_state_dict(checkpoint['model_state_dict'])
-model.eval()
+    # Predict weights
+    with torch.no_grad():
+        features = torch.tensor(data.iloc[:, 2:].values.astype("float32"))
+        predicted_weights = model(features).numpy()
 
-# Perform inference
-with torch.no_grad():
-    predictions = torch.sigmoid(model(scaled_factors)).numpy()
-
-# Save predictions
-data["Predictions"] = predictions
-data.to_csv("predictions.csv", index=False)
-print("Predictions saved to 'predictions.csv'.")
+    # Save weights
+    weights_df = pd.DataFrame(predicted_weights, columns=data.columns[2:])
+    weights_df.to_csv(OUTPUT_PATH, index=False)
+    print(f"Weights saved to {OUTPUT_PATH}")
