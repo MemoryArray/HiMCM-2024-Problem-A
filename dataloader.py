@@ -24,6 +24,11 @@ class Athlete:
         return f"Athlete({self.Name}, {self.Sport})"
 
 def load_athletes():
+    """Loads the athlete data from the CSV file.
+
+    Returns:
+        List: A list of Athlete objects.
+    """
     athletes = []
     with open(r'data\athlete_events.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
@@ -49,6 +54,11 @@ class Sanction:
         return f"Sanction({self.sport}, {self.substance_reason})"
 
 def load_sanction():
+    """Loads the sanction data from the CSV file.
+
+    Returns:
+        List: A list of Sanction objects.
+    """
     sanctions = []
     with open(r'data\athlete_sanction.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
@@ -61,6 +71,11 @@ def load_sanction():
 
 # NOC maptable
 def load_noc_map():
+    """Loads the NOC-region map from the CSV file.
+
+    Returns:
+        Dict: A dictionary mapping NOC to region and notes.
+    """
     noc_map = {}
     with open(r'data\noc_regions.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
@@ -70,6 +85,11 @@ def load_noc_map():
     
 # Women's competition loader
 def load_womens_competition_intro_time():
+    """Loads the introduction time of women's competition from the CSV file.
+
+    Returns:
+        Dict: A dictionary mapping sport to the year of introduction.
+    """
     womens_competition_intro_time = {}
     with open(r'data\introduction_of_women_olympic_sports.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
