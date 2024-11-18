@@ -8,9 +8,9 @@ from utils.data_utils import load_data, split_data
 import matplotlib.pyplot as plt
 
 # Constants
-DATA_PATH = "../data/plans_data.csv"
-CHECKPOINT_DIR = "../checkpoints"
-PLOT_DIR = "../plots"
+DATA_PATH = "../res/plans_data.csv"
+CHECKPOINT_DIR = "../models/"
+PLOT_DIR = "../res/"
 BATCH_SIZE = 64
 EPOCHS = 10
 LEARNING_RATE = 0.001

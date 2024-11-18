@@ -6,9 +6,9 @@ from utils.data_utils import load_data
 from utils.marcos_utils import calculate_combined_weighted_factors
 
 # Constants
-DATA_PATH = "../data/plans_data.csv"
-CHECKPOINT_PATH = "../checkpoints/final_model.pth"
-OUTPUT_PATH = "../data/weights.csv"
+DATA_PATH = "../res/plans_data.csv"
+CHECKPOINT_PATH = "../models/final_model.pth"
+OUTPUT_PATH = "../res/weights.csv"
 
 # Main
 if __name__ == "__main__":

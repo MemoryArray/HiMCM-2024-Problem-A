@@ -4,8 +4,8 @@ from models.transformer import TransformerModel
 from utils.data_utils import load_data, split_data
 
 # Constants
-DATA_PATH = "../data/plans_data.csv"
-CHECKPOINT_PATH = "../checkpoints/final_model.pth"
+DATA_PATH = "../res/plans_data.csv"
+CHECKPOINT_PATH = "../models/final_model.pth"
 BATCH_SIZE = 64
 
 # Dataset class

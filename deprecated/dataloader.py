@@ -96,3 +96,16 @@ def load_womens_competition_intro_time():
         for row in reader:
             womens_competition_intro_time[row['sport']] = row['year']
         return womens_competition_intro_time
+    
+# Index calculation function
+def calculate_indexes(visitors, coverage, tickets, athletes, intro_time, participation, facilities, magnitude,
+                       audience, budget, race, regions, age_pct, drugs, injuries, cheating, gen_pct, involvement):
+    """this function calculates the indexes for the given parameters"""
+    popularity_index = 0.405 * visitors + 0.115 * coverage + 0.480 * tickets
+    gender_equity_index = 0.633 * athletes + 0.106 * intro_time + 0.260 * participation
+    sustainability_index = 0.122 * facilities + 0.057 * magnitude + 0.263 * audience + 0.558 * budget
+    inclusivity_index = 0.633 * race + 0.260 * regions + 0.106 * age_pct
+    safety_fair_play_index = 0.230 * drugs + 0.122 * injuries + 0.648 * cheating
+    creativity_relativity_index = 0.833 * gen_pct + 0.167 * involvement
+
+    return [popularity_index, gender_equity_index, sustainability_index, inclusivity_index, safety_fair_play_index, creativity_relativity_index]

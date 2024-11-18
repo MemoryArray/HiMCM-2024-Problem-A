@@ -4,8 +4,8 @@ from utils.marcos_utils import marcos_method
 
 # Constants
 DATA_PATH = "../data/plans_data.csv"
-WEIGHTS_PATH = "../data/weights.csv"
-OUTPUT_PATH = "../data/ranked_plans.csv"
+WEIGHTS_PATH = "../res/weights.csv"
+OUTPUT_PATH = "../res/ranked_plans.csv"
 
 # Main
 if __name__ == "__main__":
