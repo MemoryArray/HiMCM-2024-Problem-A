@@ -1,6 +1,6 @@
 import torch
+import torch.nn as nn
 from torch.utils.data import DataLoader
-from models.transformer import TransformerModel
 from utils.data_utils import load_data, split_data
 
 # Constants
@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     # Load model
     input_dim = test_data.shape[1] - 2
-    model = TransformerModel(input_dim, input_dim)
+    model = nn.RNN(input_size=input_dim, hidden_size=input_dim, num_layers=2, batch_first=True)
     model.load_state_dict(torch.load(CHECKPOINT_PATH))
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = model.to(device)

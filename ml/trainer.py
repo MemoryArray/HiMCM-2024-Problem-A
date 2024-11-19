@@ -3,7 +3,6 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, Dataset
-from models.transformer import TransformerModel
 from utils.data_utils import load_data, split_data
 import matplotlib.pyplot as plt
 
@@ -57,7 +56,7 @@ if __name__ == "__main__":
 
     # Model, loss, optimizer
     input_dim = train_data.shape[1] - 2
-    model = TransformerModel(input_dim, input_dim)
+    model = nn.RNN(input_size=input_dim, hidden_size=input_dim, num_layers=2, batch_first=True)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = model.to(device)
     criterion = nn.MSELoss()

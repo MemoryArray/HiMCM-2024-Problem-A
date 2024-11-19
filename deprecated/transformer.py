@@ -1,5 +1,7 @@
 import torch.nn as nn
 
+nn.RNN()
+
 class TransformerModel(nn.Module):
     def __init__(self, input_dim, output_dim):
         super(TransformerModel, self).__init__()

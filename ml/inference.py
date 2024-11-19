@@ -1,7 +1,7 @@
 import os
 import torch
+import torch.nn as nn
 import pandas as pd
-from models.transformer import TransformerModel
 from utils.data_utils import load_data
 from utils.marcos_utils import calculate_combined_weighted_factors
 
@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     # Load model
     input_dim = data.shape[1] - 2
-    model = TransformerModel(input_dim, input_dim)
+    model = nn.RNN(input_size=input_dim, hidden_size=input_dim, num_layers=2, batch_first=True)
     model.load_state_dict(torch.load(CHECKPOINT_PATH))
     model.eval()
 
