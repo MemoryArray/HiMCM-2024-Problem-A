@@ -46,7 +46,7 @@ def calculate_IFs(
     # Sustainability Index
     def sustainability_index(E_c, R, E_e):
         penalty = E_c + (1 - R) + (1 - E_e)
-        return max(1 - penalty, 0)
+        return max(10 - penalty, 0.01)
     
     # Inclusivity Index
     def inclusivity_index(athletes_data, alpha, beta, gamma):
@@ -68,12 +68,6 @@ def calculate_IFs(
         risk = (I_r / I_max) + S + C_r
         return J * np.exp(-risk)
     
-    # Normalization
-    def normalize(values):
-        min_val = min(values)
-        max_val = max(values)
-        return [(val - min_val) / (max_val - min_val) if max_val > min_val else 0 for val in values]
-    
     # Calculate individual IFs
     P = popularity_index(N_v, M_c, T_s)
     G = gender_equity(N_f, N_m, avg_salary_f, avg_salary_m, M_s)
@@ -82,31 +76,41 @@ def calculate_IFs(
     R = relevance_innovation(G_p, Y_v)
     SF = safety_fairness(I_r, I_max, S, C_r, J)
     
-    # Normalize IFs
-    IFs = normalize([P, G, S, I, R, SF])
-    
     # Return results in a structured format
     return {
-        "Popularity": IFs[0],
-        "Gender Equity": IFs[1],
-        "Sustainability": IFs[2],
-        "Inclusivity": IFs[3],
-        "Relevance and Innovation": IFs[4],
-        "Safety and Fairness": IFs[5]
+        "Popularity": P,
+        "Gender Equity": G,
+        "Sustainability": S,
+        "Inclusivity": I,
+        "Relevance and Innovation": R,
+        "Safety and Fairness": SF
     }
 
-def minmax_normalize(values: np.ndarray):
-    """
-    Normalize values to the range [0, 1] using min-max normalization.
-    """
-    min_val = np.min(values)
-    max_val = np.max(values)
-    return (values - min_val) / (max_val - min_val)
+# Normalize function
+def mmnorm(df, exclude_rows=None, whitelist=None):
+    # Create a copy of the DataFrame to avoid modifying the original data
+    normalized_df = df.copy()
+    
+    # Get the numeric columns
+    numeric_cols = normalized_df.select_dtypes(include=[int, float]).columns
+    
+    # Get the min and max values for normalization
+    min_vals = normalized_df[numeric_cols].min()
+    max_vals = normalized_df[numeric_cols].max()
+    
+    # Normalize each column except for the specified rows
+    for column in numeric_cols:
+        # Normalize if the column is not in the exceptions
+        if (exclude_rows is None or column not in exclude_rows) and (whitelist is None or column in whitelist):
+            normalized_df[column] = (normalized_df[column] - min_vals[column]) / (max_vals[column] - min_vals[column])
+    
+    return normalized_df
 
+# Preprocess function
 def preprocess(
     daily_visitors, media_coverage, ticket_sales,  # Popularity inputs
     female_athletes, male_athletes, avg_female_salary, avg_male_salary, media_spend,  # Gender Equity inputs
-    emissions, total_waste, recyled_waste, initial_investment, NPV,  # Sustainability inputs
+    emissions, total_waste, recycled_waste, initial_investment, NPV,  # Sustainability inputs
     race_deviation, country_deviation, regional_deviation, race_alpha, country_beta, regional_gamma,  # Inclusivity inputs
     generation_participation, youth_viewers,  # Relevance and Innovation inputs
     safety_violations, injury_severity, sanctions, total_checks, judge_impartiality,  # Safety and Fairness inputs
@@ -115,48 +119,48 @@ def preprocess(
     Preprocess data to extract necessary information.
     """
     # Popularity
-    N_v = minmax_normalize(daily_visitors)
-    M_c = minmax_normalize(media_coverage)
-    T_s = minmax_normalize(ticket_sales)
+    N_v = daily_visitors
+    M_c = media_coverage
+    T_s = ticket_sales
     
     # Gender Equity
     N_f = female_athletes
     N_m = male_athletes
     avg_salary_f = avg_female_salary
     avg_salary_m = avg_male_salary
-    M_s = minmax_normalize(media_spend)
+    M_s = media_spend
     
     # Sustainability
-    E_c = minmax_normalize(emissions)
-    R = (minmax_normalize(total_waste) - minmax_normalize(recyled_waste)) / minmax_normalize(total_waste)
-    E_e = (minmax_normalize(initial_investment) - minmax_normalize(NPV)) / minmax_normalize(initial_investment)
+    E_c = emissions
+    R = (total_waste - recycled_waste) / total_waste if total_waste > 0 else 0
+    E_e = (initial_investment - NPV) / initial_investment
     
     # Inclusivity
-    R_k = minmax_normalize(race_deviation)
-    C_k = minmax_normalize(country_deviation)
-    P_k = minmax_normalize(regional_deviation)
+    R_k = race_deviation
+    C_k = country_deviation
+    P_k = regional_deviation
     alpha = race_alpha
     beta = country_beta
     gamma = regional_gamma
     
     # Relevance and Innovation
-    G_p = minmax_normalize(generation_participation)
-    Y_v = minmax_normalize(youth_viewers)
+    G_p = generation_participation
+    Y_v = youth_viewers
     
     # Safety and Fairness
-    I_r = minmax_normalize(safety_violations)
+    I_r = safety_violations
     I_max = np.max(safety_violations)
-    S = minmax_normalize(injury_severity)
-    C_r= minmax_normalize(sanctions / total_checks)
-    J = minmax_normalize(judge_impartiality)
+    S = injury_severity
+    C_r = sanctions / total_checks
+    J = judge_impartiality
     
     # Return preprocessed data
     return {
         "N_v": N_v, "M_c": M_c, "T_s": T_s,
         "N_f": N_f, "N_m": N_m, "avg_salary_f": avg_salary_f, "avg_salary_m": avg_salary_m, "M_s": M_s,
         "E_c": E_c, "R": R, "E_e": E_e,
-        "athletes_data": [(R_k, C_k, P_k) for R_k, C_k, P_k in zip(R_k, C_k, P_k)], "alpha": alpha, "beta": beta, "gamma": gamma,
+        "athletes_data": [(R_k, C_k, P_k)],
+        "alpha": alpha, "beta": beta, "gamma": gamma,
         "G_p": G_p, "Y_v": Y_v,
         "I_r": I_r, "I_max": I_max, "S": S, "C_r": C_r, "J": J
     }
-

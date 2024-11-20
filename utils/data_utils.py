@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import csv
 
 def load_data(filepath):
@@ -28,6 +29,26 @@ def split_data(data, train_start, train_end, test_start, test_end):
 
 class Athlete:
     def __init__(self, ID, Name, Sex, Age, Height, Weight, Team, NOC, Games, Year, Season, City, Sport, Event, Medal):
+        """
+        Initializes an Athlete object with the given attributes.
+
+        Args:
+            ID (int): Unique identifier for the athlete.
+            Name (str): Name of the athlete.
+            Sex (str): Sex of the athlete.
+            Age (float): Age of the athlete.
+            Height (float): Height of the athlete.
+            Weight (float): Weight of the athlete.
+            Team (str): Team of the athlete.
+            NOC (str): National Olympic Committee of the athlete.
+            Games (str): Number of games played by the athlete.
+            Year (int): Year of the athlete.
+            Season (str): Season of the athlete.
+            City (str): City of the athlete.
+            Sport (str): Sport of the athlete.
+            Event (str): Event of the athlete.
+            Medal (str): Medal of the athlete.
+        """
         self.ID = int(ID)
         self.Name = Name
         self.Sex = Sex
@@ -63,7 +84,8 @@ def load_athletes():
                 row['Sport'], row['Event'], row['Medal']
             )
             athletes.append(athlete)
-    return athletes.sort(key=lambda x: (x.Year, x.ID))
+    athletes.sort(key=lambda x: (x.Year, x.ID))
+    return athletes
 
 # Sanction loader
 
@@ -133,3 +155,28 @@ def load_womens_competition_intro_time():
 #     creativity_relativity_index = 0.833 * gen_pct + 0.167 * involvement
 
 #     return [popularity_index, gender_equity_index, sustainability_index, inclusivity_index, safety_fair_play_index, creativity_relativity_index]
+
+def year_to_olympic_session(year):
+    """
+    Convert a year to the Olympic session count, accounting for canceled Olympics.
+    
+    Parameters:
+        year (int): The year to convert.
+        
+    Returns:
+        int: The Olympic session count or -1 if the year is not an Olympic year.
+    """
+    first_olympics_year = 1896
+    olympic_interval = 4
+    canceled_years = {1916, 1940, 1944}  # Years when Olympics were canceled
+    
+    if year < first_olympics_year or (year - first_olympics_year) % olympic_interval != 0 or year in canceled_years:
+        return -1  # Not an Olympic year or canceled
+    
+    # Count sessions, skipping canceled years
+    session_count = 0
+    for olympic_year in range(first_olympics_year, year + 1, olympic_interval):
+        if olympic_year not in canceled_years:
+            session_count += 1
+    
+    return session_count
