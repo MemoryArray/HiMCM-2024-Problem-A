@@ -1,15 +1,15 @@
 # HiMCM 2024 Problem A Implementation
 > To Play or not to Play: Modeling Future Olympic Games
 
-Our team control number is `15820`. This repository provides a solution to the **HiMCM 2024 Problem A**. It should include all the required data and programs to reproduce the results. For a short summary of the target problem and the objective of this project, refer to below.
+Our team control number is `15820`. This repository demonstrats partial of our code implementation to the **HiMCM 2024 Problem A**. For a short summary of the target problem and the objective of this project, refer to below.
 
 Current working status:
 - [x] Formula & modelling
-- [ ] Coding & Plotting
-- [ ] Paper Drafting
-- [ ] Error checking
-- [ ] Citations
-- [ ] Submission
+- [x] Coding & Plotting
+- [x] Paper Drafting
+- [x] Error checking
+- [x] Citations
+- [x] Submission
 
 ---
 
